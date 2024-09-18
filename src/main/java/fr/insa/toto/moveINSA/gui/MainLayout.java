@@ -20,11 +20,14 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.toto.moveINSA.gui;
 
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.PageTitle;
+import fr.insa.beuvron.utils.exceptions.ExceptionsUtils;
 import fr.insa.toto.moveINSA.gui.session.SessionInfo;
 import fr.insa.toto.moveINSA.gui.vues.NoConnectionToBDDErrorPanel;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.SQLException;
 
 /**
@@ -61,8 +64,15 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         try {
             SessionInfo.getOrCreateConnectionToBdD();
         } catch (SQLException  ex) {
-            System.out.println(ex.getClass() + " : " + ex.getMessage());
-            bee.rerouteTo(NoConnectionToBDDErrorPanel.class);
+            // debug partiel
+            Notification.show(ExceptionsUtils.messageEtPremiersAppelsDansPackage(ex, "fr.insa", 6));
+            // debug complet
+//            StringWriter mess = new StringWriter();
+//            PrintWriter out = new PrintWriter(mess);
+//            ex.printStackTrace(out);
+//            Notification.show(mess.toString());
+            // end debug
+//            bee.rerouteTo(NoConnectionToBDDErrorPanel.class);   // normal
         }
     }
 

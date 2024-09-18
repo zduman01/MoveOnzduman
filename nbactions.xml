@@ -87,4 +87,13 @@
                 <jpda.listen>true</jpda.listen>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-toProd</actionName>
+            <displayName>toProd</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>package</goal>
+                <goal>-Pproduction</goal>
+            </goals>
+        </action>
     </actions>

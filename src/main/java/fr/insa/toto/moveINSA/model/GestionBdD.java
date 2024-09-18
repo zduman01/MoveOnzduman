@@ -23,11 +23,14 @@ import fr.insa.beuvron.utils.exceptions.ExceptionsUtils;
 import fr.insa.beuvron.utils.list.ListUtils;
 import fr.insa.beuvron.utils.database.ResultSetUtils;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.Driver;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import org.h2.jdbc.meta.DatabaseMetaServer;
 
 /**
  * Opération générales sur la base de donnée de gestion des tournois.
@@ -236,6 +239,7 @@ public class GestionBdD {
             int i = 1;
             System.out.println("Menu principal");
             System.out.println("==================");
+            System.out.println((i++) + ") test driver mysql");
             System.out.println((i++) + ") menu gestion BdD");
             System.out.println((i++) + ") menu partenaires");
             System.out.println((i++) + ") menu offres");
@@ -244,6 +248,14 @@ public class GestionBdD {
             try {
                 int j = 1;
                 if (rep == j++) {
+                    try {
+                        Class<Driver> mysqlDriver = (Class<Driver>) Class.forName("com.mysql.cj.jdbc.Driver");
+                    } catch (ClassNotFoundException ex) {
+                        System.out.println("com.mysql.cj.jdbc.Driver not found");
+                    }
+                    DatabaseMetaData meta = con.getMetaData();
+                    System.out.println("jdbc driver version : " + meta.getDriverName() + " ; " + meta.getDriverVersion());
+                } else if (rep == j++) {
                     menuBdD(con);
                 } else if (rep == j++) {
                     menuPartenaire(con);

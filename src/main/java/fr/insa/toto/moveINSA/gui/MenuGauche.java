@@ -24,6 +24,7 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 import fr.insa.toto.moveINSA.gui.vues.NouveauPartenairePanel;
 import fr.insa.toto.moveINSA.gui.vues.PartenairesPanel;
 import fr.insa.toto.moveINSA.gui.vues.RAZBdDPanel;
+import fr.insa.toto.moveINSA.gui.vues.TestDriverPanel;
 import fr.insa.toto.moveINSA.gui.vues.TodoPanel;
 
 /**
@@ -40,6 +41,7 @@ public class MenuGauche extends SideNav {
         offres.addItem(new SideNavItem("liste", TodoPanel.class));
         offres.addItem(new SideNavItem("nouvelle", TodoPanel.class));
         SideNavItem debug = new SideNavItem("debug");
+        debug.addItem(new SideNavItem("test driver", TestDriverPanel.class));
         debug.addItem(new SideNavItem("raz BdD", RAZBdDPanel.class));
        this.addItem(partenaires,offres,debug);
     }

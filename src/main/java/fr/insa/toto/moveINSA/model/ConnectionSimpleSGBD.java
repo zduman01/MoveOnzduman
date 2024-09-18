@@ -53,13 +53,24 @@ public class ConnectionSimpleSGBD {
      * @return
      */
     public static Connection defaultCon() throws SQLException {
-//        return mysqlServeurPourM3();
-        return h2InMemory("test");
+        return mysqlServeurPourM3();
+//        return h2InMemory("test");
 //        return h2InFile("bdd");
     }
 
     public static Connection connectMySQL(String host, int port,
             String database, String user, String pass) throws SQLException {
+        // ce test de la classe du driver n'est plus censée être indispensable
+        // mais j'ai des problème si je ne l'utilise pas lorsque je porte
+        // mon application web dans un serveur tomcat
+        // donc je l'ajoute.
+        // en cas de problème, je transforme l'exception ClassNotFoundException
+        // en SQLException pour ne pas surcharger les throws
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            throw new SQLException("driver mysql not found", ex);
+        }
         Connection con = DriverManager.getConnection(
                 "jdbc:mysql://" + host + ":" + port + "/" + database, database, pass);
         // fixe le plus haut degré d'isolation entre transactions
@@ -83,9 +94,9 @@ public class ConnectionSimpleSGBD {
      */
     public static Connection mysqlServeurPourM3() throws SQLException {
         return connectMySQL("92.222.25.165", 3306,
-                "nom d'utilisateur fourni par mail ; exemple : m3_fdebertranddeb01",
-                "nom d'utilisateur fourni par mail ; exemple : m3_fdebertranddeb01",
-                "votre pass fourni dans second mail ; exemple : même pas en rêve que je vous donne le mien");
+                "m3_fdebertranddeb01",
+                "m3_fdebertranddeb01",
+                "même pas en rêve");
     }
 
     /**
@@ -109,6 +120,11 @@ public class ConnectionSimpleSGBD {
      * @return
      */
     public static Connection h2InMemory(String name) throws SQLException {
+        try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException ex) {
+            throw new SQLException("driver h2 not found", ex);
+        }
         return DriverManager.getConnection("jdbc:h2:mem:" + name, null, null);
     }
 
@@ -132,6 +148,11 @@ public class ConnectionSimpleSGBD {
      * @return
      */
     public static Connection h2InFile(String path) throws SQLException {
+       try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException ex) {
+            throw new SQLException("driver h2 not found", ex);
+        }
         return DriverManager.getConnection("jdbc:h2:file:" + path, null, null);
     }
 
@@ -151,7 +172,7 @@ public class ConnectionSimpleSGBD {
      * fonctionne pour MariaDB (en espérant que cela ne change pas dans une
      * prochaine version) </p>
      * <p>
-     * exemple d'utilisation classique :      {@code
+     * exemple d'utilisation classique : null null     {@code
      *         try (PreparedStatement pst = con.prepareStatement(
      * "create table test("
      * + sqlForGeneratedKeys(con, "id") + ","
@@ -177,6 +198,5 @@ public class ConnectionSimpleSGBD {
             return nomColonne + " INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY";
         }
     }
-
 
 }
