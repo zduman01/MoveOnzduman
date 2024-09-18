@@ -19,7 +19,7 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.toto.moveINSA.gui.session;
 
 import com.vaadin.flow.server.VaadinSession;
-import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
+import fr.insa.toto.moveINSA.model.ConnectionSimpleSGBD;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;

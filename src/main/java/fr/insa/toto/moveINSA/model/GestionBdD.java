@@ -21,7 +21,6 @@ package fr.insa.toto.moveINSA.model;
 import fr.insa.beuvron.utils.ConsoleFdB;
 import fr.insa.beuvron.utils.exceptions.ExceptionsUtils;
 import fr.insa.beuvron.utils.list.ListUtils;
-import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
 import fr.insa.beuvron.utils.database.ResultSetUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -55,7 +54,7 @@ public class GestionBdD {
             st.executeUpdate(
                     "create table partenaire ( \n"
                     + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
-                    + " idPartenaire varchar(50) not null unique\n"
+                    + " refPartenaire varchar(50) not null unique\n"
                     + ")");
             st.executeUpdate(
                     "create table offremobilite ( \n"
@@ -72,7 +71,6 @@ public class GestionBdD {
                         on delete restrict on update restrict
                     """);
             con.commit();
-            con.setAutoCommit(true);
         } catch (SQLException ex) {
             con.rollback();
             throw ex;
@@ -115,7 +113,7 @@ public class GestionBdD {
      * @param con
      * @throws SQLException
      */
-    public static void intBdDTest(Connection con) throws SQLException {
+    public static void initBdDTest(Connection con) throws SQLException {
         List<Partenaire> partenaires = List.of(
                 new Partenaire("MIT"),
                 new Partenaire("Oxford")
@@ -126,7 +124,7 @@ public class GestionBdD {
         List<OffreMobilite> offres = List.of(
                 new OffreMobilite(1, partenaires.get(0).getId()),
                 new OffreMobilite(2, partenaires.get(0).getId()),
-                new OffreMobilite(3, partenaires.get(1).getId())
+                new OffreMobilite(5, partenaires.get(1).getId())
         );
         for (var o : offres) {
             o.saveInDB(con);
@@ -137,7 +135,7 @@ public class GestionBdD {
     public static void razBDD(Connection con) throws SQLException {
         deleteSchema(con);
         creeSchema(con);
-        intBdDTest(con);
+        initBdDTest(con);
     }
 
     public static void menuPartenaire(Connection con) {

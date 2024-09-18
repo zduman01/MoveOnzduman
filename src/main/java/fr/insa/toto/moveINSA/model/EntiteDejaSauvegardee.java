@@ -16,22 +16,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.insa.toto.moveINSA.gui.vues;
+package fr.insa.toto.moveINSA.model;
 
-import com.vaadin.flow.component.grid.Grid;
-import fr.insa.toto.moveINSA.model.Partenaire;
-import java.util.List;
+import java.sql.SQLException;
 
 /**
  *
  * @author francois
  */
-public class PartenaireGrid extends Grid<Partenaire> {
+public class EntiteDejaSauvegardee extends SQLException {
 
-    public PartenaireGrid(List<Partenaire> partenaires) {
-        this.setColumnReorderingAllowed(true);
-        this.addColumn(Partenaire::getRefPartenaire).setHeader("refPartenaire").setSortable(true).setResizable(true);
-        this.setItems(partenaires);
+    public EntiteDejaSauvegardee() {
+        super("L'entité à déjà été sauvegardée (id != -1");
     }
-    
+
 }

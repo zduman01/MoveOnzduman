@@ -28,20 +28,20 @@ public class PartenaireForm extends FormLayout {
     
     private Partenaire model;
 
-    private TextField tfIdPartenaire = new TextField("idPartenaire");
+    private TextField tfrefPartenaire = new TextField("refPartenaire");
     
     public PartenaireForm(Partenaire model, boolean modifiable) {
         this.model = model;
         this.setEnabled(modifiable);
         this.updateView();
-        this.add(this.tfIdPartenaire);
+        this.add(this.tfrefPartenaire);
     }
     
     public void updateModel() {
-        this.model.setIdPartenaire(this.tfIdPartenaire.getValue()); 
+        this.model.setRefPartenaire(this.tfrefPartenaire.getValue()); 
     }
     
     public void updateView() {
-        this.tfIdPartenaire.setValue(this.model.getIdPartenaire());
+        this.tfrefPartenaire.setValue(this.model.getRefPartenaire());
     }
 }
