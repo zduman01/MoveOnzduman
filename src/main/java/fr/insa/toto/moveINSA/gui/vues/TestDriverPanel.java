@@ -20,7 +20,6 @@ package fr.insa.toto.moveINSA.gui.vues;
 
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import fr.insa.toto.moveINSA.gui.MainLayout;
@@ -30,8 +29,6 @@ import java.io.StringWriter;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

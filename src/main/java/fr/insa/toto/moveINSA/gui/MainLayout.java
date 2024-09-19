@@ -15,27 +15,20 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ */
 package fr.insa.toto.moveINSA.gui;
 
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import fr.insa.beuvron.utils.exceptions.ExceptionsUtils;
-import fr.insa.toto.moveINSA.gui.session.SessionInfo;
-import fr.insa.toto.moveINSA.gui.vues.NoConnectionToBDDErrorPanel;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.sql.SQLException;
 
 /**
- * Utilisé par toutes les pages comme layout. 
- * <p> C'est ici que sont initialisées les
- * infos valables pour l'ensemble de la session, et en particulier la connection
- * à la base de donnée.
+ * Utilisé par toutes les pages comme layout.
+ * <p>
+ * C'est ici que sont initialisées les infos valables pour l'ensemble de la
+ * session, et en particulier la connection à la base de donnée.
  * </p>
+ *
  * @author francois
  */
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
@@ -50,30 +43,22 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     }
 
     /**
-     * Cette méthode est appelée systématiquement par vaadin avant l'affichage de toute
-     * page ayant ce layout (donc à priori toutes les pages "normales" sauf 
-     * pages d'erreurs) de l'application.
-     * <p> teste systématiquement la connection à la base de donnée, et 
-     * redirige vers une page d'erreur si la connection ne peut pas être 
-     * établie
+     * Cette méthode est appelée systématiquement par vaadin avant l'affichage
+     * de toute page ayant ce layout (donc à priori toutes les pages "normales"
+     * sauf pages d'erreurs) de l'application.
+     * <p>
+     * pour l'instant, je ne m'en sers pas, mais je l'ai gardé pour me souvenir
+     * de cette possibilité
      * </p>
-     * @param bee 
+     *
+     * @param bee
      */
     @Override
     public void beforeEnter(BeforeEnterEvent bee) {
-        try {
-            SessionInfo.getOrCreateConnectionToBdD();
-        } catch (SQLException  ex) {
-            // debug partiel
-            Notification.show(ExceptionsUtils.messageEtPremiersAppelsDansPackage(ex, "fr.insa", 6));
-            // debug complet
-//            StringWriter mess = new StringWriter();
-//            PrintWriter out = new PrintWriter(mess);
-//            ex.printStackTrace(out);
-//            Notification.show(mess.toString());
-            // end debug
-//            bee.rerouteTo(NoConnectionToBDDErrorPanel.class);   // normal
-        }
+        // permet par exemple de modifier la destination en cas 
+        // de problème
+//            bee.rerouteTo(NoConnectionToBDDErrorPanel.class);
+
     }
 
 }

@@ -23,8 +23,6 @@ import fr.insa.toto.moveINSA.model.ConnectionSimpleSGBD;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Conserve les informations partagées par diverses pages dans une même session.
@@ -56,8 +54,17 @@ public class SessionInfo implements Serializable {
 
     /**
      * Problème de session.
+     * <p> Normalement, les problèmes de session n'ont pas de rapport 
+     * avec la base de donnée, et ne devraient pas être des cas particulier
+     * de SQLException. 
+     * </p>
+     * <p> Mais comme nous utilisons la session pour garder la connection
+     * à la BdD, et que sans la BdD, on ne peut rien faire, on fait le choix
+     * de rendre SessionException un cas particulier de SQLException pour
+     * ne pas alourdir inutilement les 'catch'.
+     * </p>
      */
-    public static class SessionException extends Exception {
+    public static class SessionException extends SQLException {
 
         public SessionException(String message) {
             super(message);
@@ -99,18 +106,11 @@ public class SessionInfo implements Serializable {
     }
 
     public static Connection getOrCreateConnectionToBdD() throws SQLException {
-        try {
-            SessionInfo curI = getOrCreateCurSessionInfo();
-            if (curI.conBDD == null) {
-                curI.conBDD = ConnectionSimpleSGBD.defaultCon();
-            }
-            return curI.conBDD;
-        } catch (SessionException ex) {
-            // je ne fais rien s'il n'y a pas de session : on est sans doute
-            // dans un état provisoire/instable du serveur
-            // la connection sera redemandée quand il y aura une vrai session
-            return null;
+        SessionInfo curI = getOrCreateCurSessionInfo();
+        if (curI.conBDD == null) {
+            curI.conBDD = ConnectionSimpleSGBD.defaultCon();
         }
+        return curI.conBDD;
     }
 
     public static void closeConnectionToBDD(VaadinSession closingSession) throws SQLException {

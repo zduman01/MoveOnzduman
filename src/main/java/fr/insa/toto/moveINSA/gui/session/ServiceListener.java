@@ -52,6 +52,9 @@ public class ServiceListener implements VaadinServiceInitListener {
         // par contre on ferme automatiquement la connection à la fermeture de
         // la session. C'est dans closeConnectionToBDD que l'on vérifie que
         // la connection existe bien avant de la supprimer
+        // normalement, vaadin va recréer automatiquement une nouvelle session
+        // la prochaine demande d'une connection sur cette nouvelle session
+        // créera une nouvelle connection à la BdD
         event.getSource().addSessionDestroyListener(
                 destroyEvent -> {
                     try {

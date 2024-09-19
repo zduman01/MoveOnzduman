@@ -51,6 +51,7 @@ public class NouveauPartenairePanel extends VerticalLayout{
                 this.fPartenaire.updateModel();
                 this.nouveau.saveInDB(SessionInfo.getOrCreateConnectionToBdD());
             } catch (SQLException ex) {
+                System.out.println("Probleme : " + ex.getLocalizedMessage());
                 Notification.show("Probleme : " + ex.getLocalizedMessage());
             }
         });

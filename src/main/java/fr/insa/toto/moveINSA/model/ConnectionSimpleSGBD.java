@@ -53,8 +53,8 @@ public class ConnectionSimpleSGBD {
      * @return
      */
     public static Connection defaultCon() throws SQLException {
-        return mysqlServeurPourM3();
-//        return h2InMemory("test");
+//        return mysqlServeurPourM3();
+        return h2InMemory("test");
 //        return h2InFile("bdd");
     }
 
@@ -96,7 +96,7 @@ public class ConnectionSimpleSGBD {
         return connectMySQL("92.222.25.165", 3306,
                 "m3_fdebertranddeb01",
                 "m3_fdebertranddeb01",
-                "même pas en rêve");
+                "même pas en rève");
     }
 
     /**

@@ -43,6 +43,7 @@ public class PartenairesPanel extends VerticalLayout {
                     SessionInfo.getOrCreateConnectionToBdD()
             )));
         } catch (SQLException ex) {
+            System.out.println("Probleme : " + ex.getLocalizedMessage());
             Notification.show("Probleme : " + ex.getLocalizedMessage());
         }
     }

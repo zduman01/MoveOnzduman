@@ -41,6 +41,7 @@ public class RAZBdDPanel extends VerticalLayout {
             GestionBdD.razBDD(SessionInfo.getOrCreateConnectionToBdD());
             this.add(new H3("La base de données a été (ré-)initalisée"));
         } catch (SQLException ex) {
+            System.out.println("Problème : " + ex.getLocalizedMessage());
             Notification.show("Problème : " + ex.getLocalizedMessage());
         }
     }
