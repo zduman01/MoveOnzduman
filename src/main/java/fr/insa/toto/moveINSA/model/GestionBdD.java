@@ -65,6 +65,12 @@ public class GestionBdD {
                     + " nbrplaces int not null,\n"
                     + " proposepar int not null\n"
                     + ")");
+            st.executeUpdate(
+                    "create table etudiant ( \n"
+                    + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                    + " ine int not null,\n"
+                    + " nom varchar(50) not null\n"
+                    + ")");
             // création des liens
             st.executeUpdate(
                     """
@@ -140,7 +146,38 @@ public class GestionBdD {
         creeSchema(con);
         initBdDTest(con);
     }
-
+    
+    public static void sauvegarde_etudiant(Connection con)throws SQLException{
+        try ( PreparedStatement st = con.prepareStatement("insert into etudiant ( ine, nom) values(?,?)  ")){
+            ResultSet res = st.executeQuery("select*from etudiant");
+            while ( res.next()){
+                int id = res.getInt("id");
+                int ine = res.getInt("ine");
+                String nom = res.getString("nom");
+                System.out.println(id +"|"+nom+"|"+ine);
+            }
+            
+        }
+    }
+    public static void afficher_liste_etudiant(Connection con)throws SQLException{
+        try ( Statement st = con.createStatement()){
+            ResultSet res = st.executeQuery("select*from etudiant");
+            while ( res.next()){
+                int id = res.getInt("id");
+                int ine = res.getInt("ine");
+                String nom = res.getString("nom");
+                System.out.println(id +"|"+nom+"|"+ine);
+            }
+        }
+       
+    }
+    public static void recherche_etudiant(Connection con)throws SQLException{
+    }
+    public static void modif_etudiant(Connection con)throws SQLException{
+    }
+    public static void supprimer_etudiant(Connection con)throws SQLException{
+    }
+    
     public static void menuPartenaire(Connection con) {
         int rep = -1;
         while (rep != 0) {
@@ -190,7 +227,41 @@ public class GestionBdD {
             }
         }
     }
-
+    public static void menuEtudiant(Connection con){
+        int rep = -1;
+        while (rep !=0){
+            int i =1;
+            System.out.println("Menu gestion Etudiant");
+            System.out.println("============================");
+            System.out.println((i++) + ") sauvegarde etudiant");
+            System.out.println((i++) + ") afficher la liste de tous les étudiants");
+            System.out.println((i++) + ") rechercher un étudiant par son ine");
+            System.out.println((i++) + ") modifier le nom d un etudiant avec INE");
+            System.out.println((i++) + ") supprimer etuiant avec INE");
+            System.out.println("0) Retour");
+            rep = ConsoleFdB.entreeEntier("Votre choix : ");
+            try {
+                int j = 1;
+                if (rep == j++) {
+                    afficher_liste_etudiant(con)
+                } else if (rep == j++) {
+                    afficher_liste_etudiant(con);
+                    try (PreparedStatement pst = con.prepareStatement(ordre)) {
+                        pst.executeUpdate();
+                    }
+                } else if (rep == j++) {
+                    String ordre = ConsoleFdB.entreeString("requete SQL : ");
+                    try (PreparedStatement pst = con.prepareStatement(ordre)) {
+                        try (ResultSet rst = pst.executeQuery()) {
+                            System.out.println(ResultSetUtils.formatResultSetAsTxt(rst));
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                System.out.println(ExceptionsUtils.messageEtPremiersAppelsDansPackage(ex, "fr.insa.beuvron", 3));
+            }
+        }
+    }
     public static void menuBdD(Connection con) {
         int rep = -1;
         while (rep != 0) {
@@ -243,6 +314,7 @@ public class GestionBdD {
             System.out.println((i++) + ") menu gestion BdD");
             System.out.println((i++) + ") menu partenaires");
             System.out.println((i++) + ") menu offres");
+            System.out.println((i++) + ") menu etudiants");
             System.out.println("0) Fin");
             rep = ConsoleFdB.entreeEntier("Votre choix : ");
             try {
@@ -261,6 +333,8 @@ public class GestionBdD {
                     menuPartenaire(con);
                 } else if (rep == j++) {
                     menuOffre(con);
+                } else if (rep == j++) {
+                    menuEtudiant(con);
                 }
             } catch (Exception ex) {
                 System.out.println(ExceptionsUtils.messageEtPremiersAppelsDansPackage(ex, "fr.insa", 3));
