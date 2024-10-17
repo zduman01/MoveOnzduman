@@ -19,8 +19,11 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.toto.moveINSA.gui;
 
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.Route;
 
 /**
  * Utilisé par toutes les pages comme layout.
@@ -31,15 +34,15 @@ import com.vaadin.flow.router.BeforeEnterObserver;
  *
  * @author francois
  */
+@Route("main")
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
-    private MenuGauche menuGauche;
+    
 
     public MainLayout() {
 //        System.out.println("MainLayout constructeur "+this);
-        this.menuGauche = new MenuGauche();
-        this.addToDrawer(this.menuGauche);
-        this.addToNavbar(new EnteteInitiale());
+      
+         
     }
 
     /**

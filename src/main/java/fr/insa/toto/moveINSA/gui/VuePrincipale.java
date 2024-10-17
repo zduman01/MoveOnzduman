@@ -23,12 +23,3 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@PageTitle("MoveINSA")
-@Route(value = "", layout = MainLayout.class)
-public class VuePrincipale extends VerticalLayout{
-    
-    
-    public VuePrincipale() {
-        this.add(new H3("TODO"));
-    }   
-}
