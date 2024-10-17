@@ -13,7 +13,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
+You should have received a copy of the GNU Ge
+neral Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.insa.toto.moveINSA.model;
@@ -22,6 +23,7 @@ import fr.insa.beuvron.utils.ConsoleFdB;
 import fr.insa.beuvron.utils.exceptions.ExceptionsUtils;
 import fr.insa.beuvron.utils.list.ListUtils;
 import fr.insa.beuvron.utils.database.ResultSetUtils;
+import fr.insa.toto.moveINSA.gui.Application;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -31,6 +33,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import org.h2.jdbc.meta.DatabaseMetaServer;
+import org.springframework.boot.SpringApplication;
 
 /**
  * Opération générales sur la base de donnée de gestion des tournois.
@@ -49,38 +52,127 @@ public class GestionBdD {
      * @param con
      * @throws SQLException
      */
-    public static void creeSchema(Connection con)
-            throws SQLException {
-        con.setAutoCommit(false);
-        try (Statement st = con.createStatement()) {
-            // creation des tables
-            st.executeUpdate(
-                    "create table partenaire ( \n"
-                    + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
-                    + " refPartenaire varchar(50) not null unique\n"
-                    + ")");
-            st.executeUpdate(
-                    "create table offremobilite ( \n"
-                    + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
-                    + " nbrplaces int not null,\n"
-                    + " proposepar int not null\n"
-                    + ")");
-            // création des liens
-            st.executeUpdate(
-                    """
-                    alter table offremobilite
-                        add constraint fk_offremobilite_proposepar
-                        foreign key (proposepar) references partenaire(id)
-                        on delete restrict on update restrict
-                    """);
-            con.commit();
-        } catch (SQLException ex) {
-            con.rollback();
-            throw ex;
-        } finally {
-            con.setAutoCommit(true);
-        }
+    public static void creeSchema(Connection con) throws SQLException {
+    con.setAutoCommit(false);
+    try (Statement st = con.createStatement()) {
+        // Créer la table 'pays'
+        st.executeUpdate(
+                "CREATE TABLE pays ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " nomPays VARCHAR(100) NOT NULL UNIQUE\n"    // Le nom du pays (doit être unique)
+                + ")");
+        
+        // Créer la table 'specialite'
+        st.executeUpdate(
+                "CREATE TABLE specialite ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " nomSpecialite VARCHAR(100) NOT NULL UNIQUE\n" // Le nom de la spécialité, doit être unique
+                + ")");
+        
+        // Créer la table 'partenaire'
+        st.executeUpdate(
+                "CREATE TABLE partenaire ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " nomEcole VARCHAR(100) NOT NULL,\n"  // Nom de l'école
+                + " idPays INT NOT NULL,\n"  // ID du pays (clé étrangère vers une table 'pays')
+                + " FOREIGN KEY (idPays) REFERENCES pays(id) ON DELETE RESTRICT ON UPDATE CASCADE\n"  // Contrainte de clé étrangère pour le pays
+                + ")");
+        
+        // Créer la table 'responsable_departement'
+        st.executeUpdate(
+                "CREATE TABLE responsable_departement ( \n"
+                + " id INT AUTO_INCREMENT PRIMARY KEY,\n"  // Génération automatique de l'ID
+                + " nom VARCHAR(50) NOT NULL,\n"  // Nom du responsable
+                + " prenom VARCHAR(50) NOT NULL,\n"  // Prénom du responsable
+                + " idSpecialite INT NOT NULL,\n"  // Lien vers la spécialité (table specialite)
+                + " FOREIGN KEY (idSpecialite) REFERENCES specialite(id) ON DELETE CASCADE ON UPDATE CASCADE\n"
+                + ")");
+        
+        // Créer la table 'etudiant'
+        st.executeUpdate(
+                "CREATE TABLE etudiant ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " INE INT NOT NULL UNIQUE,\n"  // Identifiant national de l'étudiant
+                + " prenom VARCHAR(50) NOT NULL,\n"  // Prénom de l'étudiant
+                + " nom VARCHAR(50) NOT NULL,\n"  // Nom de l'étudiant
+                + " score INT DEFAULT 0,\n"  // Score de l'étudiant, avec une valeur par défaut de 0
+                + " idSpecialite INT NOT NULL,\n"  // Lien vers l'ID de la spécialité
+                + " FOREIGN KEY (idSpecialite) REFERENCES specialite(id) ON DELETE CASCADE ON UPDATE CASCADE\n"  // Lien vers la table spécialité
+                + ")");
+        
+        // Créer la table 'offremobilite'
+        st.executeUpdate(
+                "CREATE TABLE offremobilite ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " nbrplaces INT NOT NULL,\n"  // Nombre de places disponibles
+                + " proposepar INT NOT NULL,\n"  // ID du partenaire (clé étrangère vers table 'partenaire')
+                + " typeMobilite VARCHAR(50) NOT NULL,\n"  // Type de mobilité (ex: Erasmus, stage, échange)
+                + " idPays INT NOT NULL,\n"  // ID du pays (clé étrangère vers table 'pays')
+                + " semestre INT NOT NULL CHECK (semestre IN (1, 2)),\n"  // Semestre (1 ou 2)
+                + " idSpecialite INT NOT NULL,\n"  // ID de la spécialité (clé étrangère vers table 'specialite')
+                + " FOREIGN KEY (proposepar) REFERENCES partenaire(id) ON DELETE RESTRICT ON UPDATE CASCADE,\n"  // Contrainte clé étrangère vers 'partenaire'
+                + " FOREIGN KEY (idPays) REFERENCES pays(id) ON DELETE RESTRICT ON UPDATE CASCADE,\n"  // Contrainte clé étrangère vers 'pays'
+                + " FOREIGN KEY (idSpecialite) REFERENCES specialite(id) ON DELETE RESTRICT ON UPDATE CASCADE\n"  // Contrainte clé étrangère vers 'specialite'
+                + ")");
+        
+        // Créer la table 'candidature'
+        st.executeUpdate(
+                "CREATE TABLE candidature ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " idEtudiant INT NOT NULL,\n"  // Identifiant de l'étudiant
+                + " statut VARCHAR(50) DEFAULT 'en attente',\n"  // Statut de la candidature, par défaut 'en attente'
+                + " dateDepot DATETIME DEFAULT CURRENT_TIMESTAMP,\n"  // Date de dépôt
+                + " vœu1 INT,\n"  // Premier vœu
+                + " vœu2 INT,\n"  // Deuxième vœu
+                + " vœu3 INT,\n"  // Troisième vœu
+                + " vœu4 INT,\n"  // Quatrième vœu
+                + " vœu5 INT,\n"  // Cinquième vœu
+                + " FOREIGN KEY (idEtudiant) REFERENCES etudiant(id) ON DELETE CASCADE,\n"
+                + " FOREIGN KEY (vœu1) REFERENCES offremobilite(id) ON DELETE SET NULL,\n"
+                + " FOREIGN KEY (vœu2) REFERENCES offremobilite(id) ON DELETE SET NULL,\n"
+                + " FOREIGN KEY (vœu3) REFERENCES offremobilite(id) ON DELETE SET NULL,\n"
+                + " FOREIGN KEY (vœu4) REFERENCES offremobilite(id) ON DELETE SET NULL,\n"
+                + " FOREIGN KEY (vœu5) REFERENCES offremobilite(id) ON DELETE SET NULL\n"
+                + ")");
+        
+        // Créer les tables de connexion
+        st.executeUpdate(
+                "CREATE TABLE connexion_etudiant ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " pseudo_etudiant VARCHAR(50) NOT NULL,\n"
+                + " motDePass_etudiant VARCHAR(50) NOT NULL\n" // Dernière colonne sans virgule
+                + ")");
+        
+        st.executeUpdate(
+                "CREATE TABLE connexion_partenaire ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " pseudo_partenaire VARCHAR(50) NOT NULL,\n"
+                + " motDePass_partenaire VARCHAR(50) NOT NULL\n" // Dernière colonne sans virgule
+                + ")");
+        
+        st.executeUpdate(
+                "CREATE TABLE connexion_responsable_departement ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " pseudo_departement VARCHAR(50) NOT NULL,\n"
+                + " motDePass_departement VARCHAR(50) NOT NULL\n" // Dernière colonne sans virgule
+                + ")");
+        
+        st.executeUpdate(
+                "CREATE TABLE SRI ( \n"
+                + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ",\n"
+                + " pseudo_SRI VARCHAR(50) NOT NULL,\n"
+                + " motDePass_SRI VARCHAR(50) NOT NULL\n" // Dernière colonne sans virgule
+                + ")");
+        
+        con.commit();
+        System.out.println("Tables créées avec succès");
+    } catch (SQLException ex) {
+        con.rollback();
+        throw ex;
+    } finally {
+        con.setAutoCommit(true);
     }
+}
 
     /**
      * suppression complete de toute la BdD.
@@ -88,27 +180,28 @@ public class GestionBdD {
      * @param con
      * @throws SQLException
      */
-    public static void deleteSchema(Connection con) throws SQLException {
-        try (Statement st = con.createStatement()) {
-            // je supprime d'abord les liens
-            try {
-                st.executeUpdate(
-                        "alter table offremobilite drop constraint fk_offremobilite_proposepar");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the constraint was not created
-            }
-            // je peux maintenant supprimer les tables
-            try {
-                st.executeUpdate("drop table offremobilite");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the table was not created
-            }
-            try {
-                st.executeUpdate("drop table partenaire");
-            } catch (SQLException ex) {
-            }
-        }
+   public static void deleteSchema(Connection con) throws SQLException {
+    try (Statement st = con.createStatement()) {
+        // Supprimer les tables dans l'ordre inverse de leur création
+        st.executeUpdate("DROP TABLE IF EXISTS candidature");
+        st.executeUpdate("DROP TABLE IF EXISTS connexion_etudiant");
+        st.executeUpdate("DROP TABLE IF EXISTS connexion_partenaire");
+        st.executeUpdate("DROP TABLE IF EXISTS connexion_responsable_departement");
+        st.executeUpdate("DROP TABLE IF EXISTS etudiant");
+        st.executeUpdate("DROP TABLE IF EXISTS responsable_departement");
+        st.executeUpdate("DROP TABLE IF EXISTS offremobilite");
+        st.executeUpdate("DROP TABLE IF EXISTS partenaire");
+        st.executeUpdate("DROP TABLE IF EXISTS specialite");
+        st.executeUpdate("DROP TABLE IF EXISTS pays");
+        st.executeUpdate("DROP TABLE IF EXISTS SRI");
+
+        System.out.println("Toutes les tables ont été supprimées avec succès.");
+    } catch (SQLException e) {
+        System.err.println("Erreur lors de la suppression des tables: " + e.getMessage());
+        throw e;  // Propager l'exception pour un traitement ultérieur
     }
+}
+
 
     /**
      * crée un jeu de test dans la BdD.
@@ -139,6 +232,8 @@ public class GestionBdD {
         deleteSchema(con);
         creeSchema(con);
         initBdDTest(con);
+       
+        
     }
 
     public static void menuPartenaire(Connection con) {
@@ -206,6 +301,7 @@ public class GestionBdD {
                 int j = 1;
                 if (rep == j++) {
                     razBDD(con);
+                
                 } else if (rep == j++) {
                     String ordre = ConsoleFdB.entreeString("ordre SQL : ");
                     try (PreparedStatement pst = con.prepareStatement(ordre)) {
@@ -243,6 +339,7 @@ public class GestionBdD {
             System.out.println((i++) + ") menu gestion BdD");
             System.out.println((i++) + ") menu partenaires");
             System.out.println((i++) + ") menu offres");
+            System.out.println((i++) + ") initialiser");
             System.out.println("0) Fin");
             rep = ConsoleFdB.entreeEntier("Votre choix : ");
             try {
@@ -257,10 +354,13 @@ public class GestionBdD {
                     System.out.println("jdbc driver version : " + meta.getDriverName() + " ; " + meta.getDriverVersion());
                 } else if (rep == j++) {
                     menuBdD(con);
+                  
                 } else if (rep == j++) {
                     menuPartenaire(con);
                 } else if (rep == j++) {
                     menuOffre(con);
+                }else if (rep == j++) {
+                   
                 }
             } catch (Exception ex) {
                 System.out.println(ExceptionsUtils.messageEtPremiersAppelsDansPackage(ex, "fr.insa", 3));
@@ -270,5 +370,6 @@ public class GestionBdD {
 
     public static void main(String[] args) {
         menuPrincipal();
+        
     }
 }
