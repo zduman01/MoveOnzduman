@@ -24,7 +24,7 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -37,10 +37,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-
-
-
 
 
 @Route("") // Route pour la page de connexion
@@ -122,7 +118,7 @@ public class LoginView extends VerticalLayout {
                 login();
             } catch (SQLException e) {
                 e.printStackTrace();
-                add(new Label("Erreur lors de la vérification des identifiants."));
+                add(new Paragraph("Erreur lors de la vérification des identifiants."));
             }
         });
 
@@ -152,7 +148,7 @@ public class LoginView extends VerticalLayout {
                 getUI().ifPresent(ui -> ui.navigate("main"));
             } else {
                 // Afficher un message d'erreur si les identifiants sont incorrects
-                add(new Label("Nom d'utilisateur ou mot de passe incorrect"));
+                add(new Paragraph("Nom d'utilisateur ou mot de passe incorrect"));
             }
         } finally {
             connection.close();

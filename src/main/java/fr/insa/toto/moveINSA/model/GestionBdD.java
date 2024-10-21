@@ -209,33 +209,23 @@ public class GestionBdD {
      * @param con
      * @throws SQLException
      */
-    public static void initBdDTest(Connection con) throws SQLException {
-        List<Partenaire> partenaires = List.of(
-                new Partenaire("MIT"),
-                new Partenaire("Oxford")
-        );
-        for (var p : partenaires) {
-            p.saveInDB(con);
-        }
-        List<OffreMobilite> offres = List.of(
-                new OffreMobilite(1, partenaires.get(0).getId()),
-                new OffreMobilite(2, partenaires.get(0).getId()),
-                new OffreMobilite(5, partenaires.get(1).getId())
-        );
-        for (var o : offres) {
-            o.saveInDB(con);
-        }
-
-    }
+   
 
     public static void razBDD(Connection con) throws SQLException {
         deleteSchema(con);
         creeSchema(con);
-        initBdDTest(con);
-       
         
+       
     }
-
+    
+   
+    public static void recherche_etudiant(Connection con)throws SQLException{
+    }
+    public static void modif_etudiant(Connection con)throws SQLException{
+    }
+    public static void supprimer_etudiant(Connection con)throws SQLException{
+    }
+    
     public static void menuPartenaire(Connection con) {
         int rep = -1;
         while (rep != 0) {
@@ -285,7 +275,7 @@ public class GestionBdD {
             }
         }
     }
-
+   
     public static void menuBdD(Connection con) {
         int rep = -1;
         while (rep != 0) {
