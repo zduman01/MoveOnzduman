@@ -53,9 +53,8 @@ public class ConnectionSimpleSGBD {
      * @return
      */
     public static Connection defaultCon() throws SQLException {
-//        return mysqlServeurPourM3();
-        return h2InMemory("test");
-//        return h2InFile("bdd");
+       return mysqlServeurPourM3();
+
     }
 
     public static Connection connectMySQL(String host, int port,

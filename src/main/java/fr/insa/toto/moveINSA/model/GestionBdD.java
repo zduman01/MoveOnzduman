@@ -202,18 +202,35 @@ public class GestionBdD {
     }
 }
 
+public static void insertSpecialites(Connection con) throws SQLException {
+        String sql = "INSERT INTO specialite (nomSpecialite) VALUES (?)";
 
-    /**
-     * crée un jeu de test dans la BdD.
-     *
-     * @param con
-     * @throws SQLException
-     */
+        // Spécialités à insérer
+        String[] specialites = {
+            "Génie Civil",
+            "Génie Electrique",
+            "Génie Mecanique",
+            "Génie Thermique Energetique et Environnement",
+            "Mécatronique",
+            "Plasturgie",
+            "Topographie"
+        };
+
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+            for (String specialite : specialites) {
+                pstmt.setString(1, specialite);
+                pstmt.executeUpdate();
+            }
+        }
+    }
+
+   
    
 
     public static void razBDD(Connection con) throws SQLException {
         deleteSchema(con);
         creeSchema(con);
+        insertSpecialites(con);
         
        
     }

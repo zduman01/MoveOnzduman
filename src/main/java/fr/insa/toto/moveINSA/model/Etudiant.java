@@ -96,7 +96,7 @@ public class Etudiant {
         String pseudo = basePseudo + String.format("%02d", count);  // Ajoute 01 à la fin (ldupont01)
 
         // Requête pour vérifier si le pseudo existe déjà dans la base
-        String sql = "SELECT COUNT(*) FROM etudiant WHERE pseudo = ?";
+        String sql = "SELECT COUNT(*) FROM connexion_etudiant WHERE pseudo_etudiant = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, pseudo);

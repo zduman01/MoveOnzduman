@@ -1,21 +1,3 @@
-/*
-Copyright 2000- Francois de Bertrand de Beuvron
-
-This file is part of CoursBeuvron.
-
-CoursBeuvron is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-CoursBeuvron is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
- */
 package fr.insa.toto.moveINSA.gui;
 
 import com.vaadin.flow.component.button.Button;
@@ -33,11 +15,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import fr.insa.toto.moveINSA.model.ConnectionSimpleSGBD;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 
 @Route("") // Route pour la page de connexion
 public class LoginView extends VerticalLayout {
@@ -68,7 +50,7 @@ public class LoginView extends VerticalLayout {
         header.getStyle().set("position", "fixed"); // Fixe l'en-tête en haut
         header.getStyle().set("top", "0"); // Positionné en haut de la page
         header.getStyle().set("z-index", "1000"); // S'assurer que l'en-tête reste au-dessus
-        
+
         // Appliquer une couleur de fond gris clair
         getStyle().set("background-color", "#f0f0f0"); // Gris clair
 
@@ -86,20 +68,18 @@ public class LoginView extends VerticalLayout {
         passwordField = new PasswordField("Mot de passe");
         passwordField.getStyle().set("border", "2px solid #B22222"); // Bordure rouge épaisse
         passwordField.getStyle().set("border-radius", "10px"); // Bordures arrondies
-        passwordField.getElement().getStyle().set("--lumo-primary-text-color", "\"#B22222\""); 
+        passwordField.getElement().getStyle().set("--lumo-primary-text-color", "\"#B22222\"");
         passwordField.setWidth("300px");
+
         // Bouton de connexion
         loginButton = new Button("Se connecter");
         loginButton.getStyle().set("background-color", "#B22222"); // Bouton rouge
         loginButton.getStyle().set("color", "white"); // Texte du bouton en blanc
 
-
-
         // Lien pour l'enregistrement
         Anchor registerLink = new Anchor("registration", "Première connexion ?");
         registerLink.getStyle().set("color", "#B22222"); // Lien en rouge
-   
-        
+
         // Ajouter les champs de connexion
         VerticalLayout formLayout = new VerticalLayout(title, usernameField, passwordField, loginButton, registerLink);
         formLayout.setAlignItems(Alignment.CENTER);
@@ -126,15 +106,15 @@ public class LoginView extends VerticalLayout {
         add(header, formLayout);
     }
 
-  private void login() throws SQLException {
+    private void login() throws SQLException {
         String username = usernameField.getValue();
         String password = passwordField.getValue();
 
-        // Connexion à la base de données (à remplacer par votre propre logique de connexion)
+        // Connexion à la base de données
         Connection connection = ConnectionSimpleSGBD.defaultCon(); // Remplace par ta méthode de connexion
 
         // Préparer la requête SQL
-        String sql = "SELECT * FROM connexion WHERE pseudo = ? AND motDePasse = ?";
+        String sql = "SELECT * FROM connexion_etudiant WHERE pseudo_etudiant = ? AND motDePass_etudiant = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, username);  // Insertion du pseudo dans la requête
             preparedStatement.setString(2, password);  // Insertion du mot de passe dans la requête

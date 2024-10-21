@@ -16,19 +16,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.insa.toto.moveINSA.gui.vues;
-
-/**
- *
- * @author zilan
- */
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.Route;
-
-@Route("") // Route par défaut
-public class DefaultView extends VerticalLayout {
-
-    public DefaultView() {
-        getUI().ifPresent(ui -> ui.navigate("login")); // Redirection vers la page de connexion
-    }
-}

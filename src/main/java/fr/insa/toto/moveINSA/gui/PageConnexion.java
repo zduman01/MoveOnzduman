@@ -15,13 +15,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package fr.insa.toto.moveINSA.gui;
 
-/**
- *
- * @author zilan
- */
-public class PageConnexion {
-    
-}
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
