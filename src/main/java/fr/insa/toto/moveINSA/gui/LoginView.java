@@ -21,12 +21,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@Route("") // Route pour la page de connexion
+@Route("login") // Route pour la page de connexion
 public class LoginView extends VerticalLayout {
 
     private TextField usernameField;
     private PasswordField passwordField;
     private Button loginButton;
+    String redirectPage="" ;
+    
 
     public LoginView() {
         // Style du layout principal pour centrer le contenu
@@ -35,7 +37,7 @@ public class LoginView extends VerticalLayout {
         setJustifyContentMode(JustifyContentMode.CENTER); // Aligner verticalement au centre
 
         // En-tête avec logo à gauche et texte centré
-        Image logo = new Image("images/LOGO_INSAStrasbourg.png", "");
+        Image logo = new Image("images/LOGO_INSA.png", "");
         logo.setHeight("60px"); // Ajustez la taille du logo si nécessaire
 
         H1 headerText = new H1("Bienvenue sur MoveINSA");
@@ -75,7 +77,11 @@ public class LoginView extends VerticalLayout {
         loginButton = new Button("Se connecter");
         loginButton.getStyle().set("background-color", "#B22222"); // Bouton rouge
         loginButton.getStyle().set("color", "white"); // Texte du bouton en blanc
-
+        
+        loginButton.addClickListener(event -> {
+        login(); // Appel de la méthode de connexion
+        });
+        
         // Lien pour l'enregistrement
         Anchor registerLink = new Anchor("registration", "Première connexion ?");
         registerLink.getStyle().set("color", "#B22222"); // Lien en rouge
@@ -91,47 +97,74 @@ public class LoginView extends VerticalLayout {
         formLayout.setHeight("400px"); // Hauteur fixe pour former un carré
 
         formLayout.add(registerLink);
-
-        // Gestion du clic sur le bouton de connexion
-        loginButton.addClickListener(event -> {
-            try {
-                login();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                add(new Paragraph("Erreur lors de la vérification des identifiants."));
-            }
-        });
-
-        // Ajouter l'en-tête et le formulaire de connexion
         add(header, formLayout);
     }
 
-    private void login() throws SQLException {
-        String username = usernameField.getValue();
-        String password = passwordField.getValue();
+    private void login() {
+    String role = (String) VaadinSession.getCurrent().getAttribute("role"); // Récupérer le rôle depuis la session
+    String username = usernameField.getValue();
+    String password = passwordField.getValue();
 
-        // Connexion à la base de données
-        Connection connection = ConnectionSimpleSGBD.defaultCon(); // Remplace par ta méthode de connexion
+    boolean isAuthenticated = authenticateUser(role, username, password);
+    if (isAuthenticated) {
+        // Redirection ou actions après la connexion réussie
+        Notification.show("Connexion réussie !");
+        // Rediriger vers la page appropriée en fonction du rôle
+        redirectToHome(role);
+    } else {
+        Notification.show("Identifiants incorrects !");
+    }
+}
 
-        // Préparer la requête SQL
-        String sql = "SELECT * FROM connexion_etudiant WHERE pseudo_etudiant = ? AND motDePass_etudiant = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, username);  // Insertion du pseudo dans la requête
-            preparedStatement.setString(2, password);  // Insertion du mot de passe dans la requête
-
-            // Exécuter la requête
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            // Si un utilisateur est trouvé, la connexion est validée
-            if (resultSet.next()) {
-                VaadinSession.getCurrent().setAttribute("user", username);
-                getUI().ifPresent(ui -> ui.navigate("main"));
-            } else {
-                // Afficher un message d'erreur si les identifiants sont incorrects
-                add(new Paragraph("Nom d'utilisateur ou mot de passe incorrect"));
+    private boolean authenticateUser(String role, String username, String password) {
+        try (Connection connection = ConnectionSimpleSGBD.defaultCon()) {
+            String sql = "";
+            switch (role) {
+                case "etudiant":
+                    sql = "SELECT * FROM connexion_etudiant WHERE pseudo_etudiant = ? AND motDePass_etudiant = ?";
+                    break;
+                case "sri":
+                    sql = "SELECT * FROM connexion_sri WHERE pseudo_sri = ? AND motDePass_sri = ?";
+                    break;
+                case "ecole_partenaire":
+                    sql = "SELECT * FROM connexion_ecole WHERE pseudo_ecole = ? AND motDePass_ecole = ?";
+                    break;
+                case "administrateur":
+                    sql = "SELECT * FROM connexion_admin WHERE pseudo_admin = ? AND motDePass_admin = ?";
+                    break;
             }
-        } finally {
-            connection.close();
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, username);
+                stmt.setString(2, password);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    return rs.next(); // Retourne vrai si un enregistrement est trouvé
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Gérer les exceptions comme tu le souhaites
         }
     }
+
+   private void redirectToHome(String role) {
+    
+    switch (role) {
+        case "etudiant":
+            redirectPage = "mainEtudiant"; // Remplace par la page d'accueil de l'étudiant
+            break;
+        case "sri":
+            redirectPage = "mainSRI"; // Remplace par la page d'accueil du SRI
+            break;
+        case "ecole_partenaire":
+            redirectPage = "mainPartenaire"; // Remplace par la page d'accueil de l'école partenaire
+            break;
+        case "administrateur":
+            redirectPage = "mainAdmin"; // Remplace par la page d'accueil de l'administrateur
+            break;
+    }
+    // Assurez-vous que vous êtes dans le bon contexte pour appeler getUI()
+    getUI().ifPresent(ui -> ui.navigate(redirectPage));
+}
+
 }

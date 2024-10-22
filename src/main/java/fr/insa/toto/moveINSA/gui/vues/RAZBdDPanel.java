@@ -23,7 +23,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import fr.insa.toto.moveINSA.gui.MainLayout;
+import fr.insa.toto.moveINSA.gui.MainLayoutEtudiant;
 import fr.insa.toto.moveINSA.gui.session.SessionInfo;
 import fr.insa.toto.moveINSA.model.GestionBdD;
 import java.sql.SQLException;
@@ -33,7 +33,7 @@ import java.sql.SQLException;
  * @author francois
  */
 @PageTitle("MoveINSA")
-@Route(value = "debug/RAZBDD", layout = MainLayout.class)
+@Route(value = "debug/RAZBDD", layout = MainLayoutEtudiant.class)
 public class RAZBdDPanel extends VerticalLayout {
     
     public RAZBdDPanel() {

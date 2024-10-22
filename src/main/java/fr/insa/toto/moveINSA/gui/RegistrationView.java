@@ -42,7 +42,7 @@ public class RegistrationView extends VerticalLayout {
         setJustifyContentMode(JustifyContentMode.CENTER); // Aligner verticalement au centre
 
         // En-tête avec logo à gauche et texte centré
-        Image logo = new Image("images/LOGO_INSAStrasbourg.png", "");
+        Image logo = new Image("images/LOGO_INSA.png", "");
         logo.setHeight("60px");
 
         H1 headerText = new H1("Création de compte utilisateur");

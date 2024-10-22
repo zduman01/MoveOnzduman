@@ -19,27 +19,16 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.toto.moveINSA.gui;
 
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
-/**
- * Utilisé par toutes les pages comme layout.
- * <p>
- * C'est ici que sont initialisées les infos valables pour l'ensemble de la
- * session, et en particulier la connection à la base de donnée.
- * </p>
- *
- * @author francois
- */
-@Route("main")
-public class MainLayout extends AppLayout implements BeforeEnterObserver {
+@Route("mainPartenaire")
+public class MainLayoutPartenaire extends AppLayout implements BeforeEnterObserver {
 
     
 
-    public MainLayout() {
+    public MainLayoutPartenaire() {
 //        System.out.println("MainLayout constructeur "+this);
       
          

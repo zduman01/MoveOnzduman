@@ -22,7 +22,7 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import fr.insa.toto.moveINSA.gui.MainLayout;
+import fr.insa.toto.moveINSA.gui.MainLayoutEtudiant;
 import fr.insa.toto.moveINSA.gui.session.SessionInfo;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -34,7 +34,7 @@ import java.sql.SQLException;
  *
  * @author francois
  */
-@Route(value = "debug/testDriver", layout = MainLayout.class)
+@Route(value = "debug/testDriver", layout = MainLayoutEtudiant.class)
 public class TestDriverPanel extends VerticalLayout {
 
     public TestDriverPanel() {
