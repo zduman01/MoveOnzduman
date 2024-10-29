@@ -33,25 +33,11 @@ public class LoginView extends VerticalLayout {
     public LoginView() {
         // Style du layout principal pour centrer le contenu
         setSizeFull();
-        setAlignItems(Alignment.CENTER); // Aligner horizontalement au centre
-        setJustifyContentMode(JustifyContentMode.CENTER); // Aligner verticalement au centre
-
-        // En-tête avec logo à gauche et texte centré
-        Image logo = new Image("images/LOGO_INSA.png", "");
-        logo.setHeight("60px"); // Ajustez la taille du logo si nécessaire
-
-        H1 headerText = new H1("Bienvenue sur MoveINSA");
-        headerText.getStyle().set("color", "white");
-        headerText.getStyle().set("text-align", "center"); // Centrer le texte
-
-        HorizontalLayout header = new HorizontalLayout(logo, headerText);
-        header.setWidthFull(); // Prend toute la largeur
-        header.setAlignItems(Alignment.CENTER); // Aligne verticalement le logo et le texte
-        header.getStyle().set("background-color", "#B22222"); // Couleur de fond rouge
-        header.getStyle().set("padding", "10px");
-        header.getStyle().set("position", "fixed"); // Fixe l'en-tête en haut
-        header.getStyle().set("top", "0"); // Positionné en haut de la page
-        header.getStyle().set("z-index", "1000"); // S'assurer que l'en-tête reste au-dessus
+        
+        EnteteInitiale enteteInitiale = new EnteteInitiale();
+        add(enteteInitiale);
+        this.setPadding(false);
+        
 
         // Appliquer une couleur de fond gris clair
         getStyle().set("background-color", "#f0f0f0"); // Gris clair
@@ -85,7 +71,7 @@ public class LoginView extends VerticalLayout {
         // Lien pour l'enregistrement
         Anchor registerLink = new Anchor("registration", "Première connexion ?");
         registerLink.getStyle().set("color", "#B22222"); // Lien en rouge
-
+         
         // Ajouter les champs de connexion
         VerticalLayout formLayout = new VerticalLayout(title, usernameField, passwordField, loginButton, registerLink);
         formLayout.setAlignItems(Alignment.CENTER);
@@ -94,10 +80,15 @@ public class LoginView extends VerticalLayout {
         formLayout.getStyle().set("border-radius", "15px"); // Bordures arrondies
         formLayout.getStyle().set("box-shadow", "0 4px 8px rgba(0, 0, 0, 0.1)"); // Légère ombre pour donner du relief
         formLayout.setWidth("400px"); // Largeur fixe
-        formLayout.setHeight("400px"); // Hauteur fixe pour former un carré
-
+        formLayout.setHeight("400px");
+        
+        formLayout.getStyle().set("margin-top", "200px");// Hauteur fixe pour former un carré
+        formLayout.setAlignItems(Alignment.CENTER); // Aligner horizontalement au centre
+        
         formLayout.add(registerLink);
-        add(header, formLayout);
+        setAlignItems(Alignment.CENTER);
+        add(formLayout);
+        
     }
 
     private void login() {

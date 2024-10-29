@@ -19,38 +19,23 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.toto.moveINSA.gui;
 
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLayout;
 
-@Route("mainEtudiant")
-public class MainLayoutEtudiant extends AppLayout implements BeforeEnterObserver {
-
-    
+@Route("mainEtudiant") // Route pour accéder à cette vue
+public class MainLayoutEtudiant extends VerticalLayout implements RouterLayout {
 
     public MainLayoutEtudiant() {
-//        System.out.println("MainLayout constructeur "+this);
-      
-         
+        
+        EnteteInitiale enteteInitiale = new EnteteInitiale();
+        add(enteteInitiale); // Ajouter l'en-tête au layout
+        
+        MenuGauche menuGauche = new MenuGauche();
+        add(menuGauche);
     }
 
-    /**
-     * Cette méthode est appelée systématiquement par vaadin avant l'affichage
-     * de toute page ayant ce layout (donc à priori toutes les pages "normales"
-     * sauf pages d'erreurs) de l'application.
-     * <p>
-     * pour l'instant, je ne m'en sers pas, mais je l'ai gardé pour me souvenir
-     * de cette possibilité
-     * </p>
-     *
-     * @param bee
-     */
-    @Override
-    public void beforeEnter(BeforeEnterEvent bee) {
-        // permet par exemple de modifier la destination en cas 
-        // de problème
-//            bee.rerouteTo(NoConnectionToBDDErrorPanel.class);
-
-    }
-
+   
 }

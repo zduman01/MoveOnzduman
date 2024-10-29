@@ -19,6 +19,7 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 
 package fr.insa.toto.moveINSA.gui;
 
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
@@ -28,17 +29,24 @@ public class EnteteInitiale extends HorizontalLayout {
 
     public EnteteInitiale() {
         // Créer le logo avec le chemin direct
-        Image logo = new Image("images/LOGO_INSAStrasbourg.png", "Logo INSA Strasbourg");
-        logo.setHeight("80px"); // Ajuster la hauteur du logo
-        logo.setWidth("auto");  // Ajuster la largeur automatiquement pour garder le ratio
+        
+        // En-tête avec logo à gauche et texte centré
+        Image logo = new Image("images/LOGO_INSA.png", "");
+        logo.setHeight("60px"); // Ajustez la taille du logo si nécessaire
 
-        // Ajouter le logo à l'en-tête
-        this.add(logo);
+        H1 headerText = new H1("Bienvenue sur MoveINSA");
+        headerText.getStyle().set("color", "white");
+        headerText.getStyle().set("text-align", "center"); // Centrer le texte
 
-        // Appliquer des styles pour la barre d'en-tête
-        this.setWidthFull(); // Occupe toute la largeur
-        this.getStyle().set("background-color", "red"); // Couleur de fond rouge
-        this.setAlignItems(Alignment.CENTER); // Aligner verticalement au centre
-        this.setHeight("100px"); // Hauteur de l'en-tête
+        HorizontalLayout header = new HorizontalLayout(logo, headerText);
+        header.setWidthFull(); // Prend toute la largeur
+        header.setAlignItems(Alignment.CENTER); // Aligne verticalement le logo et le texte
+        header.getStyle().set("background-color", "#B22222"); // Couleur de fond rouge
+        header.getStyle().set("padding", "10px");
+        header.getStyle().set("position", "fixed"); // Fixe l'en-tête en haut
+        header.getStyle().set("top", "0"); 
+        header.getStyle().set("left", "0");// Positionné en haut de la page
+        header.getStyle().set("z-index", "1000"); // S'assurer que l'en-tête reste au-dessus
+        add( header);
     }
 }

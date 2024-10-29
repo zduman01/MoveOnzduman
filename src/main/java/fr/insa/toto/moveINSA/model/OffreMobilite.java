@@ -104,8 +104,7 @@ public class OffreMobilite {
             return res;
         }
     }
-
-    public static int creeConsole(Connection con) throws SQLException {
+   public static int creeConsole(Connection con) throws SQLException {
         Partenaire p = Partenaire.selectInConsole(con);
         int nbr = ConsoleFdB.entreeInt("nombre de places : ");
         OffreMobilite nouveau = new OffreMobilite(nbr, p.getId());
@@ -120,3 +119,4 @@ public class OffreMobilite {
     }
 
 }
+ 

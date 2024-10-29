@@ -41,23 +41,11 @@ public class Identification extends VerticalLayout {
         setSizeFull();
         setAlignItems(Alignment.CENTER); // Aligner horizontalement au centre
         setJustifyContentMode(JustifyContentMode.CENTER); // Aligner verticalement au centre
-
-        // En-tête avec logo à gauche et texte centré
-        Image logo = new Image("images/LOGO_INSA.png", "");
-        logo.setHeight("60px"); // Ajustez la taille du logo si nécessaire
-
-        H1 headerText = new H1("Bienvenue sur MoveINSA");
-        headerText.getStyle().set("color", "white");
-        headerText.getStyle().set("text-align", "center"); // Centrer le texte
-
-        HorizontalLayout header = new HorizontalLayout(logo, headerText);
-        header.setWidthFull(); // Prend toute la largeur
-        header.setAlignItems(Alignment.CENTER); // Aligne verticalement le logo et le texte
-        header.getStyle().set("background-color", "#B22222"); // Couleur de fond rouge
-        header.getStyle().set("padding", "10px");
-        header.getStyle().set("position", "fixed"); // Fixe l'en-tête en haut
-        header.getStyle().set("top", "0"); // Positionné en haut de la page
-        header.getStyle().set("z-index", "1000"); // S'assurer que l'en-tête reste au-dessus
+        
+        EnteteInitiale enteteInitiale = new EnteteInitiale();
+        add(enteteInitiale);
+        this.setPadding(false);
+        
 
         // Appliquer une couleur de fond gris clair
         getStyle().set("background-color", "#f0f0f0"); // Gris clair
@@ -83,7 +71,7 @@ public class Identification extends VerticalLayout {
         formLayout.setHeight("400px"); // Hauteur fixe pour former un carré
 
         // Ajouter l'en-tête et le formulaire de connexion
-        add(header, formLayout);
+        add( formLayout);
     }
 
     private Button createButton(String buttonText, String role) {
