@@ -45,5 +45,19 @@ public class Specialite {
     }
     return specialites;
 }
-    
+    public static String getNomSpecialite(Connection connection, int idSpecialite) throws SQLException {
+        String nomSpecialite = null;
+        String query = "SELECT nomSpecialite FROM specialite WHERE id = ?";
+
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setInt(1, idSpecialite); // Définit l'ID de la spécialité dans la requête
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    nomSpecialite = rs.getString("nomSpecialite"); // Récupère le nom de la spécialité
+                }
+            }
+        }
+        
+        return nomSpecialite; // Retourne le nom de la spécialité, ou null si non trouvée
+    }
 }

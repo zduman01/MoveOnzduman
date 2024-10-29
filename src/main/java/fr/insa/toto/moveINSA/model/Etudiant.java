@@ -31,6 +31,15 @@ public class Etudiant {
     private String nom;
     private String pseudo; 
     private String motDePasse; // Ajoutez un champ pour le mot de passe
+    private static int idUtilisateur;
+
+    public static void setIdUtilisateur(int id) {
+        idUtilisateur = id;
+    }
+
+    public static int getIdUtilisateur() {
+        return idUtilisateur;
+    }
 
     // Constructeur
     public Etudiant(int id, int INE, String prenom, String nom, String motDePasse) {
@@ -111,6 +120,27 @@ public class Etudiant {
             }
         } return pseudo;  
     }
+    
+    public int getIdUtilisateurByPseudo(String pseudo) {
+    int idUtilisateur = -1; // Valeur par défaut pour indiquer que l'utilisateur n'a pas été trouvé
+
+    String query = "SELECT id FROM utilisateurs WHERE pseudo = ?"; // Adapté selon votre structure
+
+    try (Connection connection = ConnectionSimpleSGBD.defaultCon();
+         PreparedStatement pst = connection.prepareStatement(query)) {
+        pst.setString(1, pseudo); // Définit le pseudo dans la requête
+
+        try (ResultSet rs = pst.executeQuery()) {
+            if (rs.next()) {
+                idUtilisateur = rs.getInt("id"); // Récupère l'ID de l'utilisateur
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return idUtilisateur; // Retourne l'ID de l'utilisateur ou -1 s'il n'est pas trouvé
+}
     // Méthode pour s'inscrire
     public boolean sinscrire(String pseudo, String motDePasse, String confirmationMotDePasse) {
         // Vérification si les mots de passe correspondent

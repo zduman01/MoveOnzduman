@@ -268,30 +268,7 @@ public static void insertSpecialites(Connection con) throws SQLException {
         }
     }
 
-    public static void menuOffre(Connection con) {
-        int rep = -1;
-        while (rep != 0) {
-            int i = 1;
-            System.out.println("Menu offres mobilité");
-            System.out.println("==================");
-            System.out.println((i++) + ") liste de toutes les offres");
-            System.out.println((i++) + ") créer une nouvelle offre");
-            System.out.println("0) Retour");
-            rep = ConsoleFdB.entreeEntier("Votre choix : ");
-            try {
-                int j = 1;
-                if (rep == j++) {
-                    List<OffreMobilite> offres = OffreMobilite.toutesLesOffres(con);
-                    System.out.println(offres.size() + " offres : ");
-                    System.out.println(ListUtils.enumerateList(offres, (elem) -> elem.toString()));
-                } else if (rep == j++) {
-                    OffreMobilite.creeConsole(con);
-                }
-            } catch (Exception ex) {
-                System.out.println(ExceptionsUtils.messageEtPremiersAppelsDansPackage(ex, "fr.insa", 3));
-            }
-        }
-    }
+  
    
     public static void menuBdD(Connection con) {
         int rep = -1;
@@ -365,7 +342,7 @@ public static void insertSpecialites(Connection con) throws SQLException {
                 } else if (rep == j++) {
                     menuPartenaire(con);
                 } else if (rep == j++) {
-                    menuOffre(con);
+                  
                 }else if (rep == j++) {
                    
                 }

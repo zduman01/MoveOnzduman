@@ -100,6 +100,7 @@ public class LoginView extends VerticalLayout {
     if (isAuthenticated) {
         // Redirection ou actions après la connexion réussie
         Notification.show("Connexion réussie !");
+        getIdUtilisateur(username, password);
         // Rediriger vers la page appropriée en fonction du rôle
         redirectToHome(role);
     } else {
@@ -136,6 +137,31 @@ public class LoginView extends VerticalLayout {
             e.printStackTrace();
             return false; // Gérer les exceptions comme tu le souhaites
         }
+    }
+    
+    private void getIdUtilisateur(String username, String password) {
+        try (Connection connection = ConnectionSimpleSGBD.defaultCon()) {
+            // Préparation de la requête pour l'authentification
+            String sql = "SELECT id FROM connexion_etudiant WHERE pseudo_etudiant = ? AND motDePass_etudiant = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, username);
+                stmt.setString(2, password);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        int userId = rs.getInt("id");
+                       
+                        // Stockage de l'ID et du rôle dans la session
+                        VaadinSession.getCurrent().setAttribute("userId", userId);
+                        
+                        
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Notification.show("Erreur de connexion à la base de données.");
+        }
+        
     }
 
    private void redirectToHome(String role) {
